@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>DeccanPulse — Hyderabad Smart Parking Project Report</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1e293b; max-width: 960px; margin: 40px auto; padding: 0 24px; background: #ffffff; }
+    h1, h2, h3 { color: #0f3347; font-weight: 700; margin-top: 1.8em; }
+    h1 { font-size: 2.2rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.4em; }
+    h2 { font-size: 1.5rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.3em; margin-top: 1.4em; }
+    h3 { font-size: 1.2rem; }
+    p { margin: 12px 0; }
+    ul, ol { margin: 12px 0 12px 24px; }
+    li { margin: 6px 0; }
+    table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 0.92rem; }
+    th, td { border: 1px solid #cbd5e1; padding: 10px 14px; text-align: left; vertical-align: top; }
+    th { background: #f1f5f9; color: #0f3347; font-weight: 700; }
+    tr:nth-child(even) { background: #f8fafc; }
+    code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: 'Cascadia Mono', Consolas, monospace; font-size: 0.9em; color: #c05020; }
+    pre { background: #0f172a; color: #f8fafc; padding: 16px; border-radius: 8px; overflow-x: auto; font-size: 0.9em; line-height: 1.45; }
+    pre code { background: none; color: inherit; padding: 0; }
+    .img-box { margin: 28px 0; text-align: center; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 16px; box-shadow: 0 4px 14px rgba(0,0,0,0.05); }
+    .img-box img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid #cbd5e1; }
+    .img-caption { margin-top: 10px; font-size: 0.9rem; color: #475569; font-weight: 600; }
+    hr { border: 0; border-top: 1px solid #e2e8f0; margin: 36px 0; }
+  </style>
+</head>
+<body>
+<h1>DeccanPulse — Hyderabad Smart Parking System</h1>
+<h2>Comprehensive Project Documentation & Technical Report</h2>
+<p>**Project Name:** DeccanPulse (Hyderabad Smart Parking Application)  </p>
+<p>**Author / Developer:** Bhanu ([@bhanu-1608](https://github.com/bhanu-1608))  </p>
+<p>**Repository:** [https://github.com/bhanu-1608/smart-parking-app](https://github.com/bhanu-1608/smart-parking-app)  </p>
+<p>**Local Development Server:** `http://localhost:8000`  </p>
+<p>**Version:** 4.2.0  </p>
+<p>**Status:** Production-Ready / Fully Verified  </p>
+<hr />
+<h2>1. Executive Summary</h2>
+<p>Urban vehicular growth in Greater Hyderabad—particularly across the Western IT corridors (HITEC City, Gachibowli, Kondapur, Raidurg), central transit junctions (Ameerpet, Secunderabad, MGBS), and heritage commercial centers (Charminar, Abids)—has caused extreme parking friction. Drivers routinely spend 15 to 25 minutes searching for available parking spaces, escalating fuel consumption, road congestion, and carbon emissions.</p>
+<p>**DeccanPulse** is a modern, responsive, and full-stack smart parking platform engineered specifically for the Greater Hyderabad metropolitan area. The platform integrates real-time IoT sensor telemetry, interactive vector GIS mapping with Metro Rail overlay, turn-by-turn navigation simulation, a multi-tier parking allocation engine (separating Cars, 2-Wheelers, and EV Charging Wings), and an automated gate pass system with dynamic QR codes and PINs.</p>
+<p>The application incorporates a bespoke design language celebrating Hyderabad's architectural heritage—featuring Charminar limestone and Golconda night palettes, an iconic royal emblem, an authentic true-north precision compass, and a collapsible transit grid key.</p>
+<hr />
+<h2>2. Key Features & Functional Modules</h2>
+<table>
+<tr><th>Module</th><th>Description</th><th>Technical Implementation</th></tr>
+<tr><th>**Real-Time Availability**</th><th>Continuous live tracking of vacant, held, and occupied bays across 21 metropolitan hubs.</th><th>Async WebSocket broadcast loop (`/ws/live`) + SQLite triggers</th></tr>
+<tr><th>**Location-Based Search**</th><th>GPS proximity computation, user pin dragging, distance radius filters (5km, 10km, 18km, all).</th><th>Haversine road-distance formula + canvas projection</th></tr>
+<tr><th>**Multi-Deck Slot Allocation**</th><th>Dedicated spaces for Car Decks, Scooty/Bike Floors, and separate EV Charging Wings.</th><th>Multi-tier Bayesian slot allocation with floor filtering</th></tr>
+<tr><th>**EV Unbundled Pricing**</th><th>Independent selection of Parking Space Fee and EV Charging Power (kWh).</th><th>Dynamic pricing engine strictly rounded in multiples of ₹5</th></tr>
+<tr><th>**Interactive Map Canvas**</th><th>True North-Up 1000×700 vector map showing Nehru ORR, Musi River, lakes, and Metro rail lines.</th><th>Dynamic SVG DOM rendering with pan, zoom (1x to 2.8x), and drag</th></tr>
+<tr><th>**True North Compass**</th><th>Ornate nautical & precision compass situated at the top-right of the map frame.</th><th>8-point faceted star rose with one-click view reset (0° North)</th></tr>
+<tr><th>**Floating Grid Key (Legend)**</th><th>Glassmorphic collapsible legend identifying Metro corridors and parking spot density.</th><th>Semi-transparent floating HUD with toggleable state (`−`/`+`)</th></tr>
+<tr><th>**Navigation & GPS Simulation**</th><th>Step-by-step turn-by-turn driving directions to parking entrance gates with live route drawing.</th><th>Maneuver generator + animated waypoint traversal loop</th></tr>
+<tr><th>**Gate Pass & QR Ticket**</th><th>Digital boarding pass with deterministic SVG QR code, 6-digit gate PIN, and lifecycle actions.</th><th>FNV-1a hash QR matrix generator with entry/exit/extend API</th></tr>
+<tr><th>**Personal Garage (Vehicles)**</th><th>Fleet management supporting Cars, EV Cars, Scooty/Bikes, and EV 2-Wheelers with plates.</th><th>CRUD vehicle registry with active vehicle badge</th></tr>
+<tr><th>**Sensor Pulse & Alerts**</th><th>Live notifications feed for parking expiry warnings, space availability, and gate entries.</th><th>SQLite notifications table with unread counter badges</th></tr>
+<tr><th>**Dual Hyderabad Palettes**</th><th>Seamless toggling between **Hyderabad Light** (Limestone/Saffron) and **Dark** (Golconda Night/Neon Teal).</th><th>CSS3 custom properties with 300ms transitions + localStorage</th></tr>
+</table>
+<hr />
+<h2>3. System Architecture & Tech Stack</h2>
+<pre><code class="">
++---------------------------------------------------------------------------------+
+|                                 CLIENT TIER                                     |
+|  Responsive Web &amp; Mobile Browser UI (HTML5, Vanilla ES6 Modules, Modern CSS3)  |
+|  - Geographic SVG Map Canvas (True North-Up Projection)                         |
+|  - Floating Precision Compass Rose &amp; Collapsible Hyderabad Grid Key (Legend)   |
+|  - Turn-by-Turn Floating HUD &amp; Animated Driving Simulation                      |
+|  - Gate Pass Boarding Ticket with In-Browser Vector QR Code Generator           |
++---------------------------------------------------------------------------------+
+                                       |
+                   HTTP REST APIs / WebSocket Protocol
+                                       |
++---------------------------------------------------------------------------------+
+|                               BACKEND ENGINE                                    |
+|  FastAPI Application (Python 3.12) with Lifespan Asynchronous Context          |
+|  - api.getFacilities(), api.getFacility(), api.getNavigation()                  |
+|  - api.getQuote(), api.createReservation(), api.enterReservation()             |
+|  - api.extendReservation(), api.exitReservation(), api.getVehicles()           |
+|  - Background Async Sensor Heartbeat Task (Interval: 4.5s)                     |
+|  - WebSocket Live Hub with Connection Pooling &amp; Real-time Event Broadcast       |
++---------------------------------------------------------------------------------+
+                                       |
+                             SQLite3 Database Engine
+                                       |
++---------------------------------------------------------------------------------+
+|                               DATABASE TIER                                     |
+|  data/deccanpulse_v8.db (Relational Schema with Strict Foreign Keys)            |
+|  - facilities (21 Hyderabad Hubs, Geo-coordinates, Rates, Metro Lines)         |
+|  - bays (Multi-tier parking bays: regular_deck, two_wheeler_floor, EV wings)    |
+|  - vehicles (User fleet registry: fuel cars, EV cars, bikes, EV scooties)      |
+|  - reservations (Active &amp; past bookings, gate PINs, durations, payment data)    |
+|  - notifications (System alerts, spot updates, expiry warnings)                 |
++---------------------------------------------------------------------------------+
+</code></pre>
+<h3>Technology Breakdown:</h3>
+<li>**Frontend:** Vanilla ES6 JavaScript (zero third-party UI framework dependencies for maximum performance and instant load), CSS3 Custom Properties with hardware-accelerated animations, Scalable Vector Graphics (SVG).</li>
+<li>**Backend:** FastAPI, Uvicorn ASGI server, Pydantic v2 data models with runtime validation.</li>
+<li>**Database:** SQLite 3 with atomic transaction isolation and foreign key enforcement.</li>
+<li>**Real-Time Layer:** Native HTML5 WebSockets connected to FastAPI WebSocket endpoint (`/ws/live`).</li>
+<hr />
+<h2>4. Hyderabad Visual Identity & Color Palettes</h2>
+<p>The user interface reflects the rich cultural and technological dichotomy of Hyderabad—merging historic Nizam-era monuments with the modern cyber infrastructure of Cyberabad:</p>
+<h3>4.1. Hyderabad Light Palette (Day / Heritage)</h3>
+<li>**Canvas Background:** `#fdf9f4` — Inspired by warm Charminar limestone and Deccani parchment.</li>
+<li>**Header & Cards:** `#ffffff` — Crisp daylight contrast with subtle soft elevation shadows (`rgba(15, 51, 71, 0.10)`).</li>
+<li>**Primary Accent:** `#c05020` — Charminar sunset saffron, providing high contrast for active states.</li>
+<li>**Secondary Accent:** `#0a7d73` — Deep Hussain Sagar teal, utilized for live indicators and EV facilities.</li>
+<li>**Tertiary Accent:** `#9c6412` — Nizam royal gold, adorning dividers, star ratings, and badge borders.</li>
+<li>**Metro Lines:** Red (`#e11d48`), Blue (`#0284c7`), Green (`#059669`).</li>
+<h3>4.2. Hyderabad Dark Palette (Night / Cyberabad)</h3>
+<li>**Canvas Background:** `#0e1118` — Midnight Golconda sky with deep slate undertones.</li>
+<li>**Header & Surfaces:** `#141820` / `#1b2130` — Sleek obsidian and navy cards.</li>
+<li>**Primary Accent:** `#e07030` — Glowing neon Deccani saffron.</li>
+<li>**Secondary Accent:** `#22b898` — Cyber teal for live telemetry, active chargers, and sensor pulses.</li>
+<li>**Tertiary Accent:** `#dcb040` — Luminous Golconda gold for typography highlights and compass accents.</li>
+<li>**Map Roads & Lakes:** Obsidian asphalt (`#2a3042`) with deep reservoir cyan (`#0e2e3a`).</li>
+<hr />
+<h2>5. UI & Component Showcase</h2>
+<h3>5.1. Bespoke Royal Charminar Emblem</h3>
+<p>The logo is an intricate vector emblem constructed with:</p>
+<p>1. **Nizam Gold Squircle:** Double-rimmed rounded frame with subtle IoT radar grid coordinates.</p>
+<p>2. **Four Fluted Minarets:** Graceful spires with multi-tiered balconies and golden crescent tips.</p>
+<p>3. **Monumental Grand Archway:** Symmetrical Deccani pointed arch with an inner cusped archway.</p>
+<p>4. **Smart Parking Beacon:** Concentric sonar radio waves, a high-contrast saffron shield with modern "P", and a cyber-teal live sensor LED dot.</p>
+<h3>5.2. True North Precision Compass</h3>
+<p>Situated at the top-right of the map canvas:</p>
+<li>Dual-ring outer dial with cardinal markings (`N`, `E`, `S`, `W`) and degree ticks.</li>
+<li>Faceted dual-tone North needle (Saffron/Crimson) and South needle (Nizam Gold).</li>
+<li>Displays live `0° NORTH` orientation badge.</li>
+<li>Interactive click action resets the map zoom and pan back to standard framing (`zoom: 1.0, panX: 0, panY: 0`) accompanied by an orientation toast.</li>
+<h3>5.3. Optimized Floating Grid Key (Legend)</h3>
+<p>Situated at the bottom-left of the map canvas:</p>
+<li>Docked unobtrusively over the south-western lake region to prevent obscuring parking markers.</li>
+<li>Clearly identifies:</li>
+<p>  * **Metro Lines:** Red Line (*Miyapur ⇄ LB Nagar*), Blue Line (*Raidurg ⇄ Nagole*), Green Line (*JBS ⇄ MGBS*).</p>
+<p>  * **Parking Bay Status:** 🟢 5+ Available (Plenty), 🟡 2–4 Available (Filling Fast), 🔴 0–1 Available (Near Capacity).</p>
+<p>  * **Corridors & Water:** Nehru ORR Ring Road and Musi River & Twin Lakes.</p>
+<li>Collapsible via one-click toggle (`−` / `+`) for full-canvas map viewing.</li>
+<hr />
+<h2>6. Database Schema Design</h2>
+<h3>6.1. Table: `facilities`</h3>
+<p>Stores metadata for the 21 parking hubs:</p>
+<li>`id` (TEXT, PK): Unique identifier (e.g., `fac-hitec`, `fac-necklace`, `fac-secbad`).</li>
+<li>`name` (TEXT): Display name (e.g., "HITEC Cyber Towers", "Necklace Road").</li>
+<li>`tag` (TEXT): Category badge (e.g., "IT Corridor", "Solar EV", "Central Metro").</li>
+<li>`district` (TEXT): City zone (e.g., "Madhapur", "Tank Bund", "Secunderabad").</li>
+<li>`address` (TEXT): Street address and entrance gate landmarks.</li>
+<li>`x`, `y` (REAL): Projected canvas coordinates (0..1000, 0..700).</li>
+<li>`lat`, `lng` (REAL): Authentic GPS coordinates (Latitude 17.21..17.52 N, Longitude 78.24..78.64 E).</li>
+<li>`hourly_rate` (INTEGER): Car hourly rate in ₹ (multiples of 5: ₹30, ₹40, ₹50).</li>
+<li>`two_wheeler_rate` (INTEGER): Scooty/Bike hourly rate in ₹ (₹10 or ₹15).</li>
+<li>`ev_kwh_rate` (INTEGER): EV Car charging rate (₹15/kWh).</li>
+<li>`ev_2w_kwh_rate` (INTEGER): EV 2-Wheeler charging rate (₹10/kWh).</li>
+<li>`metro_lines` (TEXT JSON): Metro connections array (`["Red"]`, `["Blue"]`, `["Blue", "Green"]`).</li>
+<li>`amenities` (TEXT JSON): Features array (`["Covered", "Valet", "FASTag", "CCTV"]`).</li>
+<h3>6.2. Table: `bays`</h3>
+<p>Represents individual physical parking slots:</p>
+<li>`id` (TEXT, PK): Unique bay identifier (e.g., `fac-necklace-L1-101`).</li>
+<li>`facility_id` (TEXT, FK): References `facilities(id)`.</li>
+<li>`level` (TEXT): Deck floor (`L1`, `L2`, `2W-G`, `EV-Z1`).</li>
+<li>`code` (TEXT): Bay code (`101`, `2W-05`, `EVC-01`).</li>
+<li>`zone` (TEXT): `regular_deck`, `two_wheeler_floor`, or `ev_charging_zone`.</li>
+<li>`vehicle_category` (TEXT): `car` or `two_wheeler`.</li>
+<li>`status` (TEXT): `available`, `reserved`, or `occupied`.</li>
+<li>`charger_standard` (TEXT): Charging standard (`CCS2 30kW DC`, `3.3kW Smart AC`, `None`).</li>
+<li>`walk_meters` (INTEGER): Walking distance to destination gate.</li>
+<h3>6.3. Table: `reservations`</h3>
+<p>Tracks booking transactions and boarding pass lifecycles:</p>
+<li>`id` (TEXT, PK): Formatted reference (e.g., `DP-818275`).</li>
+<li>`facility_id`, `bay_id`, `vehicle_id` (TEXT, FKs).</li>
+<li>`gate_pin` (TEXT): 6-digit numeric gate entry code.</li>
+<li>`qr_payload` (TEXT): Digitally verifiable gate boarding pass payload.</li>
+<li>`status` (TEXT): `reserved`, `entered`, `completed`, or `cancelled`.</li>
+<li>`start_time`, `end_time` (TEXT ISO 8601).</li>
+<li>`duration_mins` (INTEGER): Duration in minutes (60, 120, 180, 240).</li>
+<li>`base_fee`, `ev_fee`, `discount`, `total_fee` (REAL).</li>
+<li>`payment_method` (TEXT): UPI Instant, FASTag Auto-Pay, RuPay/Card, NetBanking.</li>
+<hr />
+<h2>7. API Reference</h2>
+<table>
+<tr><th>Endpoint</th><th>Method</th><th>Description</th></tr>
+<tr><th>`/api/health`</th><th>GET</th><th>Health check returning service status and city metadata</th></tr>
+<tr><th>`/api/facilities`</th><th>GET</th><th>Lists parking facilities with proximity distances, rates, and occupancy</th></tr>
+<tr><th>`/api/facilities/{id}`</th><th>GET</th><th>Returns complete facility detail including floor layout and bay matrix</th></tr>
+<tr><th>`/api/facilities/{id}/watchlist`</th><th>POST</th><th>Toggles user notification alert for spot openings</th></tr>
+<tr><th>`/api/destinations`</th><th>GET</th><th>Autocomplete search for Hyderabad landmarks and transit junctions</th></tr>
+<tr><th>`/api/navigation/{id}`</th><th>GET</th><th>Computes turn-by-turn route, distance, ETA, and SVG path waypoints</th></tr>
+<tr><th>`/api/quote`</th><th>POST</th><th>Calculates unbundled parking and EV power quote with promo code discounts</th></tr>
+<tr><th>`/api/reservations`</th><th>GET / POST</th><th>Retrieves booking ledger or books an allocated parking bay</th></tr>
+<tr><th>`/api/reservations/{id}/enter`</th><th>POST</th><th>Gate sensor check-in: validates PIN, marks bay occupied</th></tr>
+<tr><th>`/api/reservations/{id}/exit`</th><th>POST</th><th>Gate sensor check-out: frees bay, calculates final settlement</th></tr>
+<tr><th>`/api/reservations/{id}/extend`</th><th>POST</th><th>Extends reservation by +30 or +60 minutes</th></tr>
+<tr><th>`/api/vehicles`</th><th>GET / POST</th><th>Retrieves or creates user vehicles (Car, EV, 2W)</th></tr>
+<tr><th>`/api/notifications`</th><th>GET</th><th>Fetches live notification feed</th></tr>
+<tr><th>`/api/simulate/pulse`</th><th>POST</th><th>Triggers manual IoT sensor occupancy flip and broadcasts event</th></tr>
+<tr><th>`/ws/live`</th><th>WebSocket</th><th>High-throughput WebSocket stream for live bay updates</th></tr>
+</table>
+<hr />
+<h2>8. Verification & Test Execution</h2>
+<h3>8.1. Automated Unit Test Suite</h3>
+<p>The automated test suite (`tests/test_api.py`) exercises the pricing algorithms, database constraints, multi-category floors, and lifecycle states:</p>
+<pre><code class="powershell">
+python -m unittest tests/test_api.py
+</code></pre>
+<p>**Results:**</p>
+<li>`test_01_hubs_include_car_scooty_bike_and_ev_floors` — PASSED</li>
+<li>`test_02_scooty_bike_booking_and_pricing_multiples_of_5` — PASSED</li>
+<li>`test_03_ev_car_and_ev_scooty_unbundled_pricing` — PASSED</li>
+<li>`test_04_reservation_gate_entry_and_exit_lifecycle` — PASSED</li>
+<li>`test_05_navigation_turn_by_turn_waypoints` — PASSED</li>
+<li>**Overall: 5/5 Tests Passed in 0.18s.**</li>
+<h3>8.2. In-Browser Verification Protocol</h3>
+<p>The browser verification agent executed end-to-end user workflows on `http://localhost:8000`:</p>
+<p>1. **Topbar Integrity:** Verified Charminar emblem, horizontal title and side title (`HYDERABAD · SMART PARKING • LIVE GRID`), and top-right theme switch.</p>
+<p>2. **True North Compass:** Clicked the compass on the top-right; confirmed map view reset (`zoom: 1.0, panX: 0, panY: 0`) and toast alert.</p>
+<p>3. **Floating Grid Key:** Expanded and collapsed the legend card; verified Metro line color mappings and occupancy thresholds.</p>
+<p>4. **Interactive Map & Inspector:** Selected Necklace Road marker; verified rating (★ 4.9), Metro line badge (Red Line, Khairatabad Metro), and floor metrics.</p>
+<p>5. **Turn-by-Turn Navigation:** Generated route directions and simulated live driving along waypoints until arrival at Lakefront Solar Canopy gate.</p>
+<p>6. **Slot Booking & QR Pass:** Selected bay `L1-101`, selected 2-hour duration, applied FASTag Auto-Pay, and confirmed booking. Verified dynamic QR code pass and Gate Entry PIN (`818275`).</p>
+<p>7. **Hyderabad Dark Theme:** Toggled dark mode; verified all components adapted to Golconda obsidian, neon teal, and gold.</p>
+<hr />
+<h2>9. Captured Visual Evidence Gallery</h2>
+<p>The following high-resolution screenshots are stored in `docs/screenshots/` and document every primary interface of DeccanPulse:</p>
+<p>1. **`01_map_light_mode.png`** — Interactive Hyderabad map in Light Mode featuring the Charminar emblem, reoriented header, True North compass, and floating grid key.</p>
+<p>2. **`02_navigation_directions.png`** — Route calculation with dashed path rendering and turn-by-turn navigation banner.</p>
+<p>3. **`03_gps_drive_simulation.png`** — Real-time vehicle simulation traversing waypoints along the Tank Bund corridor.</p>
+<p>4. **`04_parking_hubs_directory.png`** — Directory view of all 21 parking hubs with floor metrics, rates, and Metro line badges.</p>
+<p>5. **`05_vehicle_garage_management.png`** — Fleet management page showing Car, EV Car, Scooty/Bike, and EV Scooty categories.</p>
+<p>6. **`06_slot_allocation_booking.png`** — Slot allocation page with zone tabs, bay matrix, unbundled pricing checkboxes, and promo codes.</p>
+<p>7. **`07_ticket_boarding_pass_qr.png`** — Gate boarding pass with dynamic vector QR code, 6-digit gate PIN, and gate check-in/out controls.</p>
+<p>8. **`08_hyderabad_dark_mode.png`** — Complete interface rendering in the Hyderabad Dark Palette with glowing neon corridors and dark cartography.</p>
+<hr />
+<h2>10. Local Setup & Execution Guide</h2>
+<h3>Prerequisites</h3>
+<li>Python 3.11 or 3.12</li>
+<li>Modern web browser (Chrome, Edge, Firefox, Safari)</li>
+<h3>Steps to Run</h3>
+<pre><code class="powershell">
+# 1. Clone repository
+git clone https://github.com/bhanu-1608/smart-parking-app.git
+cd smart-parking-app
+
+# 2. Install dependencies
+pip install fastapi uvicorn pydantic
+
+# 3. Start local development server
+python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+# 4. Access application
+# Open your web browser and navigate to:
+# http://localhost:8000
+</code></pre>
+</body></html>

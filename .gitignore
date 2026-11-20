@@ -1,0 +1,30 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary / Scratch files
+*.tmp
+*.log

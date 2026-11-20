@@ -117,74 +117,74 @@ class ReportBuilder:
         fldSimple2.set(qn('w:instr'), 'PAGE')
         p_ftr._p.append(fldSimple2)
 
-    def add_h1(self, text, space_before=10, space_after=4):
+    def add_h1(self, text, space_before=12, space_after=5):
         p = self.doc.add_paragraph()
         p.paragraph_format.space_before = Pt(space_before)
         p.paragraph_format.space_after = Pt(space_after)
         p.paragraph_format.keep_with_next = True
         r = p.add_run(text)
         r.font.name = "Times New Roman"
-        r.font.size = Pt(14)
+        r.font.size = Pt(15)
         r.font.bold = True
         r.font.color.rgb = self.NAVY
         return p
 
-    def add_h2(self, text, space_before=7, space_after=3):
+    def add_h2(self, text, space_before=8, space_after=4):
         p = self.doc.add_paragraph()
         p.paragraph_format.space_before = Pt(space_before)
         p.paragraph_format.space_after = Pt(space_after)
         p.paragraph_format.keep_with_next = True
         r = p.add_run(text)
         r.font.name = "Times New Roman"
-        r.font.size = Pt(11.5)
+        r.font.size = Pt(12)
         r.font.bold = True
         r.font.color.rgb = self.SAFFRON
         return p
 
-    def add_h3(self, text, space_before=5, space_after=2):
+    def add_h3(self, text, space_before=6, space_after=3):
         p = self.doc.add_paragraph()
         p.paragraph_format.space_before = Pt(space_before)
         p.paragraph_format.space_after = Pt(space_after)
         p.paragraph_format.keep_with_next = True
         r = p.add_run(text)
         r.font.name = "Times New Roman"
-        r.font.size = Pt(10)
+        r.font.size = Pt(10.5)
         r.font.bold = True
         r.font.color.rgb = self.CHARCOAL
         return p
 
-    def add_p(self, text, bold_prefix=None, space_after=3.5, align=WD_ALIGN_PARAGRAPH.JUSTIFY):
+    def add_p(self, text, bold_prefix=None, space_after=4.5, align=WD_ALIGN_PARAGRAPH.JUSTIFY, font_size=10.5, line_spacing=1.16):
         p = self.doc.add_paragraph()
         p.alignment = align
         p.paragraph_format.space_before = Pt(0)
         p.paragraph_format.space_after = Pt(space_after)
-        p.paragraph_format.line_spacing = 1.12
+        p.paragraph_format.line_spacing = line_spacing
         if bold_prefix:
             r_b = p.add_run(bold_prefix)
             r_b.font.name = "Times New Roman"
-            r_b.font.size = Pt(9.5)
+            r_b.font.size = Pt(font_size)
             r_b.font.bold = True
             r_b.font.color.rgb = self.CHARCOAL
         r = p.add_run(text)
         r.font.name = "Times New Roman"
-        r.font.size = Pt(9.5)
+        r.font.size = Pt(font_size)
         r.font.color.rgb = self.CHARCOAL
         return p
 
-    def add_bullet(self, text, bold_prefix=None):
+    def add_bullet(self, text, bold_prefix=None, font_size=10.0, space_after=3.5, line_spacing=1.14):
         p = self.doc.add_paragraph(style='List Bullet')
         p.paragraph_format.space_before = Pt(0)
-        p.paragraph_format.space_after = Pt(2.5)
-        p.paragraph_format.line_spacing = 1.10
+        p.paragraph_format.space_after = Pt(space_after)
+        p.paragraph_format.line_spacing = line_spacing
         if bold_prefix:
             r_b = p.add_run(bold_prefix)
             r_b.font.name = "Times New Roman"
-            r_b.font.size = Pt(9.5)
+            r_b.font.size = Pt(font_size)
             r_b.font.bold = True
             r_b.font.color.rgb = self.CHARCOAL
         r = p.add_run(text)
         r.font.name = "Times New Roman"
-        r.font.size = Pt(9.5)
+        r.font.size = Pt(font_size)
         r.font.color.rgb = self.CHARCOAL
         return p
 
@@ -198,7 +198,7 @@ class ReportBuilder:
         cell = table.cell(0, 0)
         cell.width = Inches(6.6)
         set_cell_background(cell, "F0F9FF")
-        set_cell_margins(cell, top=60, bottom=60, left=100, right=100)
+        set_cell_margins(cell, top=70, bottom=70, left=110, right=110)
         
         tcPr = cell._tc.get_or_add_tcPr()
         borders = parse_xml(
@@ -213,18 +213,19 @@ class ReportBuilder:
 
         p = cell.paragraphs[0]
         p.paragraph_format.space_after = Pt(2)
+        p.paragraph_format.line_spacing = 1.15
         r_t = p.add_run(f"✦  {title.upper()}: ")
         r_t.font.name = "Times New Roman"
-        r_t.font.size = Pt(9.0)
+        r_t.font.size = Pt(9.5)
         r_t.font.bold = True
         r_t.font.color.rgb = RGBColor(3, 105, 161)
         
         r_body = p.add_run(text)
         r_body.font.name = "Times New Roman"
-        r_body.font.size = Pt(9.0)
+        r_body.font.size = Pt(9.5)
         r_body.font.color.rgb = RGBColor(15, 23, 42)
 
-    def add_image(self, img_path, caption, width=Inches(4.3)):
+    def add_image(self, img_path, caption, width=Inches(4.75)):
         if os.path.exists(img_path):
             p_img = self.doc.add_paragraph()
             p_img.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -236,29 +237,25 @@ class ReportBuilder:
             
             p_cap = self.doc.add_paragraph()
             p_cap.alignment = WD_ALIGN_PARAGRAPH.CENTER
-            p_cap.paragraph_format.space_before = Pt(0)
+            p_cap.paragraph_format.space_before = Pt(1)
             p_cap.paragraph_format.space_after = Pt(3)
             r_cap = p_cap.add_run(caption)
             r_cap.font.name = "Times New Roman"
-            r_cap.font.size = Pt(8.5)
+            r_cap.font.size = Pt(9.0)
             r_cap.font.bold = True
             r_cap.font.color.rgb = self.GRAY
         else:
             self.add_callout(f"IMAGE NOT FOUND AT: {img_path}", title="MISSING ASSET")
 
-    def add_paired_images(self, img1_path, cap1, img2_path, cap2, width=Inches(4.3)):
-        self.add_image(img1_path, cap1, width=width)
-        self.add_image(img2_path, cap2, width=width)
-
-    def add_table(self, headers, data, col_widths, caption=None):
+    def add_table(self, headers, data, col_widths, caption=None, font_size=8.5, cell_pad_v=45):
         if caption:
             p_cap = self.doc.add_paragraph()
-            p_cap.paragraph_format.space_before = Pt(5)
-            p_cap.paragraph_format.space_after = Pt(2)
+            p_cap.paragraph_format.space_before = Pt(6)
+            p_cap.paragraph_format.space_after = Pt(3)
             p_cap.paragraph_format.keep_with_next = True
             r_cap = p_cap.add_run(caption)
             r_cap.font.name = "Times New Roman"
-            r_cap.font.size = Pt(8.5)
+            r_cap.font.size = Pt(9.0)
             r_cap.font.bold = True
             r_cap.font.color.rgb = self.NAVY
 
@@ -276,13 +273,13 @@ class ReportBuilder:
             cell = hdr_row.cells[i]
             cell.width = Inches(col_widths[i])
             set_cell_background(cell, "0F3347")
-            set_cell_margins(cell, top=45, bottom=45, left=80, right=80)
+            set_cell_margins(cell, top=cell_pad_v + 10, bottom=cell_pad_v + 10, left=80, right=80)
             p = cell.paragraphs[0]
             p.alignment = WD_ALIGN_PARAGRAPH.LEFT
             p.paragraph_format.space_after = Pt(0)
             r = p.add_run(h_text)
             r.font.name = "Times New Roman"
-            r.font.size = Pt(8.5)
+            r.font.size = Pt(font_size + 0.5)
             r.font.bold = True
             r.font.color.rgb = RGBColor(255, 255, 255)
 
@@ -297,24 +294,24 @@ class ReportBuilder:
                 cell = row.cells[c_idx]
                 cell.width = Inches(col_widths[c_idx])
                 set_cell_background(cell, bg_color)
-                set_cell_margins(cell, top=35, bottom=35, left=80, right=80)
+                set_cell_margins(cell, top=cell_pad_v, bottom=cell_pad_v, left=80, right=80)
                 p = cell.paragraphs[0]
                 p.alignment = WD_ALIGN_PARAGRAPH.LEFT
                 p.paragraph_format.space_after = Pt(0)
-                p.paragraph_format.line_spacing = 1.02
+                p.paragraph_format.line_spacing = 1.05
                 r = p.add_run(str(cell_value))
                 r.font.name = "Times New Roman"
-                r.font.size = Pt(8.0)
+                r.font.size = Pt(font_size)
                 r.font.color.rgb = self.CHARCOAL
 
-    def add_code_listing(self, code_text, caption):
+    def add_code_listing(self, code_text, caption, font_size=8.0, cell_pad_v=55):
         p_cap = self.doc.add_paragraph()
-        p_cap.paragraph_format.space_before = Pt(5)
+        p_cap.paragraph_format.space_before = Pt(6)
         p_cap.paragraph_format.space_after = Pt(2)
         p_cap.paragraph_format.keep_with_next = True
         r_cap = p_cap.add_run(caption)
         r_cap.font.name = "Times New Roman"
-        r_cap.font.size = Pt(8.5)
+        r_cap.font.size = Pt(9.0)
         r_cap.font.bold = True
         r_cap.font.color.rgb = self.NAVY
 
@@ -327,13 +324,13 @@ class ReportBuilder:
         cell = table.cell(0, 0)
         cell.width = Inches(6.6)
         set_cell_background(cell, "F8FAFC")
-        set_cell_margins(cell, top=50, bottom=50, left=80, right=80)
+        set_cell_margins(cell, top=cell_pad_v, bottom=cell_pad_v, left=90, right=90)
         
         tcPr = cell._tc.get_or_add_tcPr()
         borders = parse_xml(
             f'<w:tcBorders {nsdecls("w")}>'
             f'  <w:top w:val="single" w:sz="4" w:space="0" w:color="CBD5E1"/>'
-            f'  <w:left w:val="single" w:sz="16" w:space="0" w:color="0F3347"/>'
+            f'  <w:left w:val="single" w:sz="18" w:space="0" w:color="0F3347"/>'
             f'  <w:bottom w:val="single" w:sz="4" w:space="0" w:color="CBD5E1"/>'
             f'  <w:right w:val="single" w:sz="4" w:space="0" w:color="CBD5E1"/>'
             f'</w:tcBorders>'
@@ -344,13 +341,13 @@ class ReportBuilder:
         for i, line in enumerate(lines):
             p = cell.paragraphs[0] if i == 0 else cell.add_paragraph()
             p.paragraph_format.space_after = Pt(0)
-            p.paragraph_format.line_spacing = 1.0
+            p.paragraph_format.line_spacing = 1.05
             r = p.add_run(line)
             r.font.name = "Consolas"
-            r.font.size = Pt(7.5)
+            r.font.size = Pt(font_size)
             r.font.color.rgb = self.CHARCOAL
 
     def add_page_break(self):
         self.doc.add_page_break()
 
-print("ReportBuilder successfully updated.")
+print("ReportBuilder successfully updated with enhanced sizes and spacings.")
